@@ -1,9 +1,24 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Home() {
   const [tasks, setTasks] = useState([]);
   const [input, setInput] = useState("");
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("myTasks");
+    if (saved) {
+      setTasks(JSON.parse(saved));
+    }
+    setLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (loaded) {
+      localStorage.setItem("myTasks", JSON.stringify(tasks));
+    }
+  }, [tasks, loaded]);
 
   function addTask() {
     if (input.trim() === "") return;
